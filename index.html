@@ -1,0 +1,2070 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>귤하르방 투어</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; background: #f8f3e9; color: #1f3a4d; }
+        .hero {
+            position: relative; overflow: hidden; padding: 56px 20px 96px; color: #fff; text-align: center;
+            background:
+                radial-gradient(circle at 80% 15%, rgba(255,226,140,.65), transparent 45%),
+                linear-gradient(150deg, #e8591a, #f2862a 55%, #f7b13f);
+        }
+        .hero-txt { position: relative; z-index: 2; }
+        .eyebrow { letter-spacing: .35em; font-size: 12px; color: #fff3d6; font-weight: 700; margin-bottom: 8px; }
+        .hero h1 { margin: 0 0 10px; font-size: clamp(28px, 5.5vw, 46px); text-shadow: 0 3px 12px rgba(120,40,0,.45); }
+        .hero p { margin: 0; opacity: .95; }
+        .wave { position: absolute; left: 0; bottom: -1px; width: 100%; height: 56px; z-index: 1; }
+        .hb { position: absolute; bottom: 30px; width: 96px; height: 144px; z-index: 2; filter: drop-shadow(0 6px 8px rgba(0,0,0,.35)); }
+        /* 좌우 대칭이 되지 않게: 왼쪽은 크고 살짝 기울고, 오른쪽은 작고 안쪽에 서 있다 */
+        .hb.left { left: 4%; bottom: 24px; width: 118px; height: 177px; transform: rotate(-4deg); }
+        .hb.right { right: 13%; bottom: 40px; width: 74px; height: 111px; transform: rotate(6deg); }
+        .fruit { position: absolute; z-index: 1; font-size: 34px; animation: bob 5s ease-in-out infinite; filter: drop-shadow(0 4px 4px rgba(0,0,0,.25)); }
+        .f1 { left: 17%; top: 20%; } .f2 { right: 9%; top: 26%; animation-delay: -1.5s; font-size: 28px; }
+        .f3 { left: 27%; bottom: 30%; animation-delay: -3s; font-size: 24px; }
+        .f4 { right: 24%; bottom: 24%; animation-delay: -2s; font-size: 30px; }
+        .f5 { left: 5%; top: 12%; animation-delay: -4s; font-size: 28px; }
+        @keyframes bob { 50% { transform: translateY(-12px) rotate(8deg); } }
+        @media (max-width: 700px) { .hb.left { width: 70px; height: 105px; bottom: 30px; } .hb.right { width: 46px; height: 69px; bottom: 40px; right: 8%; } .fruit { font-size: 22px; } }
+        .wrap { max-width: 1100px; margin: -52px auto 0; padding: 0 16px 0; position: relative; z-index: 3; }
+
+        .panel { background: #fff; border-radius: 18px; padding: 16px; box-shadow: 0 8px 24px rgba(15,60,90,.14); border-top: 5px solid #f08a24; }
+        .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+        .row[hidden] { display: none; }
+        .row b { font-size: 13px; color: #5a7387; min-width: 54px; }
+        .pill {
+            border: 1px solid #c9d9e4; background: #fff; color: #27506d; border-radius: 99px;
+            padding: 6px 14px; font-size: 14px; cursor: pointer; font-family: inherit;
+        }
+        .pill:hover { background: #eaf4f9; }
+        .pill.on { background: #f08a24; color: #fff; border-color: #f08a24; }
+        .tools { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .tools input, .tools select {
+            padding: 10px 12px; border: 1px solid #c9d9e4; border-radius: 10px; font-size: 15px; font-family: inherit;
+        }
+        .tools input { flex: 1; min-width: 180px; }
+        .count { margin: 18px 4px 10px; color: #4a6479; font-size: 14px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+        .card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 14px rgba(15,60,90,.1); display: flex; flex-direction: column; transition: transform .2s; }
+        .card:hover { transform: translateY(-4px); }
+        .pic { position: relative; height: 160px; display: flex; align-items: center; justify-content: center; font-size: 54px; background: linear-gradient(135deg, #7fc4d6, #3a8fa8); }
+        .pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .tag { position: absolute; left: 10px; top: 10px; z-index: 1; font-size: 12px; font-weight: 700; color: #fff; padding: 3px 10px; border-radius: 12px; background: rgba(0,0,0,.55); }
+        .tag.food { background: rgba(214, 90, 30, .9); }
+        .star {
+            position: absolute; right: 8px; top: 6px; z-index: 1; border: 0; background: rgba(255,255,255,.85);
+            width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer; line-height: 1;
+        }
+        .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .body h3 { margin: 0; font-size: 17px; }
+        .meta { font-size: 13px; color: #5a7387; }
+        .desc { font-size: 13.5px; line-height: 1.55; color: #2c4a60; flex: 1; }
+        .info { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: #4a6479; }
+        .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+        .chip { padding: 3px 10px; border-radius: 12px; background: #eef3f6; color: #3d5a70; font-weight: 600; }
+        .chip.in { background: #e3ecff; color: #2b55b0; }
+        .chip.out { background: #e1f4e8; color: #1f7a45; }
+        .hours { background: #fff4e5; color: #9a5a10; padding: 5px 10px; border-radius: 10px; font-weight: 600; }
+        .wx { padding: 5px 10px; border-radius: 10px; background: #fdf1e3; color: #a1541a; font-weight: 600; }
+        .links { display: flex; gap: 12px; font-size: 13px; }
+        .links a { color: #167a8f; font-weight: 700; text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+        .empty { text-align: center; padding: 50px 0; color: #5a7387; }
+        /* 양옆 풍경: 카드 영역 양옆을 꽉 채우는 두 개의 띠. 안의 장식은 띠 기준 %로 흩어 놓고, 크기는 --k (화면 폭에 맞춰 JS 가 계산)로 함께 커지고 작아진다 */
+        :root { --k: .85; }
+        .band { position: fixed; top: 0; bottom: 0; width: calc(50% - 556px); display: none; z-index: 0; pointer-events: none; overflow: hidden; }
+        .band-l { left: 0; } .band-r { right: 0; }
+        @media (min-width: 1500px) { .band { display: block; } }
+        .it { position: absolute; width: calc(var(--w) * var(--k) * 1px); height: auto; translate: -50% -50%; transform: rotate(var(--r, 0deg)); }
+        .it.hb { filter: drop-shadow(0 6px 8px rgba(0,0,0,.28)); }
+        .it.sway { animation: sway 6s ease-in-out infinite; }
+        .it.hop { animation: hop 3.4s ease-in-out infinite; }
+        .it.tilt { animation: tilt 4.8s ease-in-out infinite; }
+        .it.grass { transform-origin: bottom center; animation: grass 5s ease-in-out infinite; }
+        .it.float { animation: float 4.5s ease-in-out infinite; }
+        .b-wall { position: absolute; left: -2%; bottom: 0; width: 104%; height: 14vh; }
+        .b-sea { position: absolute; left: -4%; bottom: 0; width: 108%; height: 26vh; animation: seaMove 6s ease-in-out infinite; }
+        .b-boat { position: absolute; left: 46%; bottom: 12vh; width: calc(74px * var(--k)); height: auto; translate: -50% 0; transform-origin: bottom center; animation: boat 4.5s ease-in-out infinite; }
+        .b-dol { position: absolute; height: auto; translate: -50% 0; }
+        .b-dol.d1 { left: 20%; bottom: 10vh; width: calc(86px * var(--k)); animation: jump 6s ease-in-out infinite; }
+        .b-dol.d2 { left: 72%; bottom: 9vh; width: calc(62px * var(--k)); animation: jump 7.5s ease-in-out infinite -3.5s; }
+        @keyframes sway { 50% { transform: rotate(calc(var(--r) + 5deg)) translateY(-4px); } }
+        @keyframes hop { 0%, 100% { transform: rotate(var(--r)) translateY(0); } 45% { transform: rotate(calc(var(--r) - 6deg)) translateY(-16px); } 60% { transform: rotate(calc(var(--r) + 4deg)) translateY(-16px); } }
+        @keyframes tilt { 50% { transform: rotate(calc(var(--r) - 12deg)); } }
+        @keyframes grass { 50% { transform: rotate(calc(var(--r, 0deg) + 3deg)); } }
+        @keyframes float { 50% { transform: translateY(-9px) rotate(calc(var(--r) + 8deg)); } }
+        @keyframes seaMove { 50% { transform: translateX(-9px); } }
+        @keyframes boat { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(4deg); } }
+        /* 돌고래: 물속에서 솟아올라 호를 그리며 뛰고, 다시 물속으로 들어간다 */
+        @keyframes jump {
+            0% { transform: translate(0, 34px) rotate(-35deg); opacity: 0; }
+            8% { opacity: 1; }
+            38% { transform: translate(20px, -50px) rotate(-10deg); opacity: 1; }
+            58% { transform: translate(38px, -38px) rotate(28deg); opacity: 1; }
+            80% { transform: translate(52px, 26px) rotate(58deg); opacity: 1; }
+            90%, 100% { transform: translate(56px, 38px) rotate(62deg); opacity: 0; }
+        }
+                /* 돌담 위의 귤하르방 */
+        .wall-hb { top: -74px; bottom: auto; }
+        .wall-hb.w1 { left: 8%; width: 70px; height: 105px; transform: rotate(-3deg); }
+        .wall-hb.w2 { left: 46%; width: 54px; height: 81px; top: -58px; transform: rotate(4deg); }
+        .wall-hb.w3 { right: 9%; width: 78px; height: 117px; top: -82px; transform: rotate(3deg); }
+        .pic { cursor: pointer; }
+        .hint { position: absolute; left: 50%; bottom: 10px; transform: translate(-50%, 8px); z-index: 1; opacity: 0; transition: .2s;
+            font-size: 13px; font-weight: 700; color: #fff; background: rgba(232,89,26,.92); padding: 5px 14px; border-radius: 16px; white-space: nowrap; }
+        .pic:hover .hint { opacity: 1; transform: translate(-50%, 0); }
+        .mapdlg { border: 0; border-radius: 20px; padding: 22px 22px 18px; width: min(360px, calc(100vw - 32px)); text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,.35); border-top: 6px solid #f08a24; }
+        .mapdlg::backdrop { background: rgba(20,30,40,.55); }
+        .mapdlg h2 { margin: 0 0 4px; font-size: 20px; }
+        .mapdlg p { margin: 0 0 14px; font-size: 13px; color: #5a7387; }
+        .mapbtns { display: grid; gap: 8px; margin-bottom: 12px; }
+        .mapbtns a { display: block; padding: 11px; border-radius: 12px; text-decoration: none; font-weight: 700; color: #fff; }
+        .mapbtns a.g { background: #3b7ddd; } .mapbtns a.n { background: #1fb560; }
+        .mapbtns a.k { background: #f2c200; color: #3a2e00; } .mapbtns a.d { background: #e8591a; }
+        .card { border: 2px solid transparent; }
+        .card:hover { border-color: #f08a24; box-shadow: 0 10px 22px rgba(240,138,36,.25); }
+        .count::before { content: '🍊 '; }
+        .body h3::after { content: ''; }
+        .note { padding-bottom: 8px; }
+        /* 돌담: 현무암 돌을 쌓은 모양 */
+        .wall { margin-top: 34px; position: relative; padding: 34px 16px 30px; text-align: center; color: #efe9dc; font-size: 14px;
+            background:
+                radial-gradient(ellipse 26px 17px at 26px 17px, #6a6a6a 96%, transparent 100%) 0 0 / 52px 34px,
+                radial-gradient(ellipse 26px 17px at 0 34px, #5a5a5a 96%, transparent 100%) 0 0 / 52px 34px,
+                #3b3b3b; }
+        .wall-txt { display: inline-block; background: rgba(30,30,30,.82); padding: 8px 18px; border-radius: 20px; }
+        .note { margin-top: 30px; font-size: 12.5px; color: #5a7387; line-height: 1.7; }
+    </style>
+</head>
+<body>
+    <!-- 돌하르방 (직접 그린 SVG: 벙거지 모자, 큰 눈과 코, 배 위의 두 손) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="harubang" viewBox="0 0 100 150">
+            <ellipse cx="50" cy="144" rx="38" ry="5" fill="rgba(0,0,0,.18)"/>
+            <ellipse cx="34" cy="140" rx="12" ry="6" fill="#7a7a7a"/>
+            <ellipse cx="66" cy="140" rx="12" ry="6" fill="#7a7a7a"/>
+            <ellipse cx="50" cy="106" rx="40" ry="36" fill="#8f8f8f"/>
+            <ellipse cx="50" cy="112" rx="27" ry="26" fill="#a6a6a6"/>
+            <ellipse cx="50" cy="60" rx="30" ry="25" fill="#a9a9a9"/>
+            <!-- 귤 모자: 주황색 벙거지(둥근 윗부분 + 넓은 챙)와 꼭대기의 초록 새싹 -->
+            <path d="M27 44 Q27 14 50 14 Q73 14 73 44 Z" fill="#f47a1f"/>
+            <path d="M50 14 Q43 28 38 43 M50 14 Q57 28 62 43 M50 14 Q35 24 29 42 M50 14 Q65 24 71 42" stroke="#d8610f" stroke-width="1.1" fill="none" opacity=".8"/>
+            <path d="M36 22 Q42 16 50 16" stroke="#ffb36b" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/>
+            <ellipse cx="50" cy="45" rx="46" ry="9" fill="#e86a12"/>
+            <ellipse cx="50" cy="43" rx="46" ry="8" fill="#f7882c"/>
+            <path d="M8 45 Q50 54 92 45" stroke="#d8610f" stroke-width="1.2" fill="none" opacity=".7"/>
+            <path d="M50 14 Q50 9 50 5" stroke="#1f5a2f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M50 7 Q42 0 35 4 Q42 10 50 7 Z" fill="#1f6a35"/>
+            <path d="M50 7 Q58 0 65 4 Q58 10 50 7 Z" fill="#256f3a"/>
+            <circle cx="31" cy="68" r="6" fill="#f2a597" opacity=".75"/>
+            <circle cx="69" cy="68" r="6" fill="#f2a597" opacity=".75"/>
+            <ellipse cx="40" cy="58" rx="4.4" ry="5.6" fill="#2f2f2f"/>
+            <ellipse cx="60" cy="58" rx="4.4" ry="5.6" fill="#2f2f2f"/>
+            <circle cx="41.6" cy="56" r="1.7" fill="#fff"/>
+            <circle cx="61.6" cy="56" r="1.7" fill="#fff"/>
+            <ellipse cx="50" cy="65" rx="4.5" ry="3.2" fill="#838383"/>
+            <path d="M41 71 Q50 80 59 71" stroke="#4a4a4a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+            <circle cx="38" cy="104" r="8" fill="#b4b4b4"/>
+            <circle cx="62" cy="116" r="8" fill="#b4b4b4"/>
+            <circle cx="22" cy="100" r="2" fill="#a0a0a0"/><circle cx="78" cy="104" r="2.2" fill="#a0a0a0"/>
+            <circle cx="30" cy="124" r="1.8" fill="#b0b0b0"/><circle cx="72" cy="126" r="1.8" fill="#b0b0b0"/>
+            <circle cx="36" cy="46" r="1.5" fill="#c4c4c4"/><circle cx="66" cy="76" r="1.5" fill="#c4c4c4"/>
+        </symbol>
+</svg>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <!-- 돌담: 현무암을 쌓은 모양 -->
+        <symbol id="dwall" viewBox="0 0 200 90">
+            <path d="M0 90 V30 Q30 10 70 12 Q120 8 160 22 Q190 30 200 40 V90 Z" fill="#3a3a3a"/>
+            <rect x="2" y="60" width="40" height="29" rx="12" fill="#666"/><rect x="44" y="62" width="36" height="27" rx="11" fill="#555"/>
+            <rect x="82" y="59" width="42" height="30" rx="13" fill="#707070"/><rect x="126" y="62" width="34" height="27" rx="11" fill="#5d5d5d"/>
+            <rect x="162" y="58" width="36" height="31" rx="12" fill="#6a6a6a"/>
+            <rect x="10" y="32" width="38" height="28" rx="12" fill="#747474"/><rect x="50" y="34" width="40" height="27" rx="12" fill="#5a5a5a"/>
+            <rect x="92" y="31" width="36" height="28" rx="12" fill="#686868"/><rect x="130" y="35" width="40" height="26" rx="11" fill="#777"/>
+            <rect x="172" y="40" width="26" height="22" rx="9" fill="#5f5f5f"/>
+            <rect x="20" y="8" width="36" height="26" rx="12" fill="#6c6c6c"/><rect x="58" y="12" width="34" height="23" rx="11" fill="#7d7d7d"/>
+            <rect x="96" y="10" width="38" height="23" rx="11" fill="#626262"/><rect x="136" y="16" width="30" height="21" rx="10" fill="#707070"/>
+            <path d="M22 10 Q30 2 40 8 Q46 4 54 10 Z" fill="#5a8f3c"/><path d="M100 12 Q108 4 118 10 Q124 6 132 12 Z" fill="#6aa046"/>
+            <circle cx="30" cy="72" r="2" fill="#8a8a8a"/><circle cx="104" cy="74" r="2.2" fill="#8a8a8a"/><circle cx="70" cy="46" r="2" fill="#909090"/><circle cx="150" cy="48" r="2" fill="#8a8a8a"/>
+        </symbol>
+        <!-- 풀 한 포기 -->
+        <symbol id="dgrass" viewBox="0 0 60 50">
+            <path d="M6 50 Q5 30 1 14 Q10 28 12 50 Z" fill="#4a9338"/><path d="M14 50 Q14 24 12 4 Q22 22 20 50 Z" fill="#62ad47"/>
+            <path d="M24 50 Q27 28 36 10 Q33 30 31 50 Z" fill="#3f8a31"/><path d="M32 50 Q38 30 50 20 Q42 36 38 50 Z" fill="#68b44c"/>
+            <path d="M40 50 Q48 38 58 34 Q50 44 47 50 Z" fill="#4a9338"/>
+        </symbol>
+        <!-- 바다: 물결 4겹 + 갈매기 -->
+        <symbol id="dsea" viewBox="0 -34 220 134">
+            <path d="M0 38 Q27 20 55 38 T110 38 T165 38 T220 38 V100 H0 Z" fill="#4fb3cf"/>
+            <path d="M0 54 Q27 36 55 54 T110 54 T165 54 T220 54 V100 H0 Z" fill="#2a8fb5"/>
+            <path d="M0 70 Q27 52 55 70 T110 70 T165 70 T220 70 V100 H0 Z" fill="#1c789f"/>
+            <path d="M0 86 Q27 70 55 86 T110 86 T165 86 T220 86 V100 H0 Z" fill="#14607f"/>
+            <path d="M6 38 Q27 24 50 38 M60 38 Q82 24 104 38 M116 38 Q138 24 160 38 M170 38 Q192 24 214 38" stroke="#fff" stroke-width="2" fill="none" opacity=".8" stroke-linecap="round"/>
+            <path d="M20 56 Q40 44 60 56 M120 56 Q140 44 160 56" stroke="#fff" stroke-width="1.6" fill="none" opacity=".5" stroke-linecap="round"/>
+            <path d="M120 -14 q6 -7 12 0 q6 -7 12 0 M160 -26 q5 -6 10 0 q5 -6 10 0" stroke="#5b7c8d" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </symbol>
+        <!-- 억새 -->
+        <symbol id="dreed" viewBox="0 0 70 140">
+            <path d="M12 140 Q14 80 6 30" stroke="#a9b06a" stroke-width="2.4" fill="none"/><ellipse cx="6" cy="22" rx="5" ry="16" fill="#d9c27a" transform="rotate(-8 6 22)"/>
+            <path d="M34 140 Q36 70 38 10" stroke="#a9b06a" stroke-width="2.4" fill="none"/><ellipse cx="38" cy="6" rx="5.5" ry="17" fill="#e0cb85"/>
+            <path d="M56 140 Q54 84 62 44" stroke="#a9b06a" stroke-width="2.4" fill="none"/><ellipse cx="62" cy="36" rx="5" ry="15" fill="#cdb468" transform="rotate(10 62 36)"/>
+            <path d="M22 140 Q22 112 28 92" stroke="#8fa456" stroke-width="2" fill="none"/><path d="M46 140 Q48 112 44 96" stroke="#8fa456" stroke-width="2" fill="none"/>
+        </symbol>
+        <!-- 귤나무 -->
+        <symbol id="dtree" viewBox="0 0 100 130">
+            <ellipse cx="50" cy="124" rx="34" ry="5" fill="rgba(0,0,0,.15)"/>
+            <path d="M45 124 L46 84 L54 84 L55 124 Z" fill="#7a5530"/>
+            <circle cx="50" cy="52" r="34" fill="#3f9b45"/><circle cx="30" cy="62" r="22" fill="#4aa850"/><circle cx="70" cy="60" r="23" fill="#3a9040"/><circle cx="50" cy="34" r="22" fill="#55b35a"/>
+            <circle cx="38" cy="48" r="5.5" fill="#f5871f"/><circle cx="62" cy="40" r="5.5" fill="#f79a35"/><circle cx="52" cy="66" r="5.5" fill="#f5871f"/>
+            <circle cx="28" cy="66" r="5" fill="#f79a35"/><circle cx="73" cy="64" r="5.5" fill="#f5871f"/><circle cx="46" cy="28" r="5" fill="#f79a35"/><circle cx="60" cy="56" r="5" fill="#f5871f"/>
+        </symbol>
+        <!-- 돛단배 -->
+        <symbol id="dboat" viewBox="0 0 80 70">
+            <path d="M40 6 L40 48" stroke="#6b4a2b" stroke-width="2.4"/>
+            <path d="M42 9 Q68 28 66 45 L42 45 Z" fill="#fff"/>
+            <path d="M38 15 Q22 30 16 45 L38 45 Z" fill="#ffd9a0"/>
+            <path d="M40 6 L53 10 L40 15 Z" fill="#f5871f"/>
+            <path d="M6 48 L74 48 L64 63 Q40 68 16 63 Z" fill="#b5542a"/>
+            <path d="M6 48 L74 48" stroke="#f3e6d0" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="26" cy="55" r="2" fill="#f3e6d0"/><circle cx="40" cy="57" r="2" fill="#f3e6d0"/><circle cx="54" cy="55" r="2" fill="#f3e6d0"/>
+        </symbol>
+        <!-- 돌고래 (오른쪽을 보고 있음) -->
+        <symbol id="ddolphin" viewBox="-12 -4 102 54">
+            <path d="M8 33 Q-2 38 -10 31 Q-3 28 3 26 Q-3 20 -9 15 Q3 15 11 27 Z" fill="#4d7a9a"/>
+            <path d="M6 34 Q20 6 56 12 Q76 14 88 22 Q74 24 66 30 Q44 44 20 40 Q12 40 6 34 Z" fill="#5f8fb0"/>
+            <path d="M20 40 Q44 44 66 30 Q74 26 86 23 Q70 34 50 38 Q34 42 20 40 Z" fill="#e8f1f6"/>
+            <path d="M36 12 Q40 -2 52 3 Q45 8 48 13 Z" fill="#4d7a9a"/>
+            <path d="M52 30 Q58 40 66 38 Q60 34 60 28 Z" fill="#4d7a9a"/>
+            <circle cx="73" cy="21" r="1.7" fill="#1c2b36"/>
+            <path d="M80 26 Q84 27 87 24" stroke="#3d5f78" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </symbol>
+        <!-- 귤 한 알 -->
+        <symbol id="dtang" viewBox="0 0 40 44">
+            <ellipse cx="20" cy="41" rx="12" ry="2.5" fill="rgba(0,0,0,.14)"/>
+            <circle cx="20" cy="26" r="16" fill="#f5871f"/>
+            <circle cx="20" cy="28" r="16" fill="#f79a35" opacity=".5"/>
+            <ellipse cx="13" cy="19" rx="5" ry="3" fill="#fcc27a" opacity=".85" transform="rotate(-30 13 19)"/>
+            <circle cx="22" cy="11" r="2" fill="#c96a0e"/>
+            <path d="M20 11 Q20 6 22 3" stroke="#3f7a2a" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M21 8 Q30 2 36 7 Q28 12 21 8 Z" fill="#46a03a"/>
+            <path d="M20 9 Q12 3 6 7 Q13 12 20 9 Z" fill="#5db84a"/>
+        </symbol>
+        <!-- 동백꽃 -->
+        <symbol id="dcamellia" viewBox="0 0 40 40">
+            <ellipse cx="11" cy="31" rx="10" ry="5" fill="#2f7a3a" transform="rotate(-25 11 31)"/>
+            <ellipse cx="30" cy="31" rx="10" ry="5" fill="#3a8a44" transform="rotate(25 30 31)"/>
+            <circle cx="20" cy="9" r="8" fill="#d6283a"/><circle cx="31" cy="17" r="8" fill="#e03346"/><circle cx="27" cy="29" r="8" fill="#d6283a"/>
+            <circle cx="13" cy="29" r="8" fill="#e03346"/><circle cx="9" cy="17" r="8" fill="#d6283a"/><circle cx="20" cy="20" r="9" fill="#ee4a5c"/>
+            <circle cx="20" cy="20" r="4.5" fill="#ffd54a"/><circle cx="17" cy="18" r="1.2" fill="#e8a600"/><circle cx="23" cy="19" r="1.2" fill="#e8a600"/><circle cx="20" cy="23" r="1.2" fill="#e8a600"/>
+        </symbol>
+        <!-- 갈매기 -->
+        <symbol id="dgull" viewBox="0 0 40 16">
+            <path d="M2 12 Q10 0 20 10 Q30 0 38 12" stroke="#4e6e80" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+    </svg>
+
+    <header class="hero">
+        <svg class="hb left" viewBox="0 0 100 150"><use href="#harubang"/></svg>
+        <svg class="hb right" viewBox="0 0 100 150"><use href="#harubang"/></svg>
+        <span class="fruit f1">🍊</span><span class="fruit f2">🍊</span><span class="fruit f3">🍊</span>
+        <span class="fruit f4">🌺</span><span class="fruit f5">🍃</span>
+        <div class="hero-txt">
+            <div class="eyebrow">JEJU ISLAND GUIDE</div>
+            <h1>귤하르방 투어</h1>
+            <p>🍊 제주 명소 59곳과 맛집 35곳 · 카테고리로 고르고, 점수순으로 보세요</p>
+        </div>
+        <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 40 Q180 0 360 36 T720 36 T1080 36 T1440 30 V80 H0 Z" fill="#f8f3e9"/>
+        </svg>
+    </header>
+
+    <main class="wrap">
+        <section class="panel">
+            <div class="row"><b>구분</b><span id="kindBtns"></span></div>
+            <div class="row"><b>지역</b><span id="areaBtns"></span></div>
+            <div class="row" id="envRow" hidden><b>환경</b><span id="envBtns"></span></div>
+            <div class="row" id="catRow" hidden><b>분류</b><span id="catBtns"></span></div>
+            <div class="tools">
+                <input id="q" type="search" placeholder="이름·설명으로 검색">
+                <select id="sort">
+                    <option value="score">추천순 (관심도 기준)</option>
+                    <option value="name">이름 가나다순</option>
+                    <option value="data">수집한 순서</option>
+                </select>
+                <button class="pill" id="favOnly">⭐ 가 보고 싶은 곳만</button>
+            </div>
+        </section>
+
+        <div class="count" id="count"></div>
+        <section class="grid" id="grid"></section>
+
+        <p class="note" id="note"></p>
+    </main>
+
+    <dialog id="mapDlg" class="mapdlg">
+        <h2 id="mapTitle"></h2>
+        <p id="mapSub"></p>
+        <div class="mapbtns" id="mapBtns"></div>
+        <button class="pill" id="mapClose">닫기</button>
+    </dialog>
+
+    <!-- 양옆 풍경: 왼쪽은 돌담 · 귤나무 · 풀 · 동백, 오른쪽은 바다 · 배 · 돌고래 · 억새. 바다를 맨 나중에 그려서 배와 돌고래의 아래쪽이 물에 잠긴다 -->
+    <div class="band band-l" aria-hidden="true">
+    <svg class="it tree grass" viewBox="0 0 100 130" style="left:30%;top:19%;--w:100;--r:0deg;animation-delay:-1.37s" aria-hidden="true"><use href="#dtree"/></svg>
+    <svg class="it tree grass" viewBox="0 0 100 130" style="left:80%;top:57%;--w:90;--r:0deg;animation-delay:-2.74s" aria-hidden="true"><use href="#dtree"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:28%;top:4%;--w:30;--r:-10deg;animation-delay:-4.11s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:52%;top:14%;--w:26;--r:20deg;animation-delay:-5.48s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:80%;top:31%;--w:36;--r:15deg;animation-delay:-0.85s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:16%;top:44%;--w:28;--r:8deg;animation-delay:-2.22s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:56%;top:52%;--w:30;--r:-5deg;animation-delay:-3.59s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:84%;top:66%;--w:34;--r:-12deg;animation-delay:-4.96s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:26%;top:73%;--w:40;--r:5deg;animation-delay:-0.33s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:14%;top:31%;--w:24;--r:-18deg;animation-delay:-1.7s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:62%;top:70%;--w:28;--r:10deg;animation-delay:-3.07s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it cam float" viewBox="0 0 40 40" style="left:14%;top:24%;--w:34;--r:-8deg;animation-delay:-4.44s" aria-hidden="true"><use href="#dcamellia"/></svg>
+    <svg class="it cam float" viewBox="0 0 40 40" style="left:52%;top:60%;--w:30;--r:10deg;animation-delay:-5.81s" aria-hidden="true"><use href="#dcamellia"/></svg>
+    <svg class="it cam float" viewBox="0 0 40 40" style="left:12%;top:85%;--w:34;--r:5deg;animation-delay:-1.18s" aria-hidden="true"><use href="#dcamellia"/></svg>
+    <svg class="it cam float" viewBox="0 0 40 40" style="left:90%;top:44%;--w:28;--r:-12deg;animation-delay:-2.55s" aria-hidden="true"><use href="#dcamellia"/></svg>
+    <svg class="it hb hop" viewBox="0 0 100 150" style="left:72%;top:8%;--w:84;--r:12deg;animation-delay:-3.92s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it hb sway" viewBox="0 0 100 150" style="left:42%;top:38%;--w:106;--r:-9deg;animation-delay:-5.29s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it hb tilt" viewBox="0 0 100 150" style="left:24%;top:64%;--w:118;--r:7deg;animation-delay:-0.66s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it hb sway" viewBox="0 0 100 150" style="left:66%;top:81%;--w:128;--r:-6deg;animation-delay:-2.03s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="b-wall" viewBox="0 0 200 90" preserveAspectRatio="none" aria-hidden="true"><use href="#dwall"/></svg>
+    <svg class="it grass grass" viewBox="0 0 60 50" style="left:14%;top:95%;--w:48;--r:0deg;animation-delay:-3.4s" aria-hidden="true"><use href="#dgrass"/></svg>
+    <svg class="it grass grass" viewBox="0 0 60 50" style="left:90%;top:94%;--w:40;--r:0deg;animation-delay:-4.77s" aria-hidden="true"><use href="#dgrass"/></svg>
+    <svg class="it grass grass" viewBox="0 0 60 50" style="left:36%;top:50%;--w:40;--r:-4deg;animation-delay:-0.14s" aria-hidden="true"><use href="#dgrass"/></svg>
+    <svg class="it grass grass" viewBox="0 0 60 50" style="left:90%;top:27%;--w:38;--r:4deg;animation-delay:-1.51s" aria-hidden="true"><use href="#dgrass"/></svg>
+    <svg class="it grass grass" viewBox="0 0 60 50" style="left:8%;top:12%;--w:34;--r:-3deg;animation-delay:-2.88s" aria-hidden="true"><use href="#dgrass"/></svg>
+    <svg class="it grass grass" viewBox="0 0 60 50" style="left:6%;top:76%;--w:44;--r:3deg;animation-delay:-4.25s" aria-hidden="true"><use href="#dgrass"/></svg>
+    <svg class="it grass grass" viewBox="0 0 60 50" style="left:52%;top:90%;--w:44;--r:0deg;animation-delay:-5.62s" aria-hidden="true"><use href="#dgrass"/></svg>
+    </div>
+    <div class="band band-r" aria-hidden="true">
+    <svg class="it gull float" viewBox="0 0 40 16" style="left:22%;top:9%;--w:46;--r:-4deg;animation-delay:-0.99s" aria-hidden="true"><use href="#dgull"/></svg>
+    <svg class="it gull float" viewBox="0 0 40 16" style="left:62%;top:16%;--w:34;--r:6deg;animation-delay:-2.36s" aria-hidden="true"><use href="#dgull"/></svg>
+    <svg class="it gull float" viewBox="0 0 40 16" style="left:40%;top:41%;--w:30;--r:-6deg;animation-delay:-3.73s" aria-hidden="true"><use href="#dgull"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:62%;top:3%;--w:28;--r:12deg;animation-delay:-5.1s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:90%;top:12%;--w:32;--r:-15deg;animation-delay:-0.47s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:36%;top:25%;--w:26;--r:8deg;animation-delay:-1.84s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:20%;top:28%;--w:34;--r:-10deg;animation-delay:-3.21s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:60%;top:45%;--w:30;--r:14deg;animation-delay:-4.58s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:14%;top:52%;--w:26;--r:-6deg;animation-delay:-5.95s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:86%;top:60%;--w:36;--r:8deg;animation-delay:-1.32s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it tang float" viewBox="0 0 40 44" style="left:42%;top:68%;--w:28;--r:-12deg;animation-delay:-2.69s" aria-hidden="true"><use href="#dtang"/></svg>
+    <svg class="it cam float" viewBox="0 0 40 40" style="left:78%;top:36%;--w:30;--r:8deg;animation-delay:-4.06s" aria-hidden="true"><use href="#dcamellia"/></svg>
+    <svg class="it cam float" viewBox="0 0 40 40" style="left:50%;top:56%;--w:28;--r:-10deg;animation-delay:-5.43s" aria-hidden="true"><use href="#dcamellia"/></svg>
+    <svg class="it hb sway" viewBox="0 0 100 150" style="left:36%;top:7%;--w:100;--r:-10deg;animation-delay:-0.8s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it hb hop" viewBox="0 0 100 150" style="left:78%;top:20%;--w:70;--r:18deg;animation-delay:-2.17s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it hb tilt" viewBox="0 0 100 150" style="left:56%;top:32%;--w:92;--r:6deg;animation-delay:-3.54s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it hb sway" viewBox="0 0 100 150" style="left:74%;top:56%;--w:112;--r:-7deg;animation-delay:-4.91s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it hb hop" viewBox="0 0 100 150" style="left:16%;top:63%;--w:62;--r:20deg;animation-delay:-0.28s" aria-hidden="true"><use href="#harubang"/></svg>
+    <svg class="it tree grass" viewBox="0 0 100 130" style="left:30%;top:47%;--w:92;--r:0deg;animation-delay:-1.65s" aria-hidden="true"><use href="#dtree"/></svg>
+    <svg class="it reed grass" viewBox="0 0 70 140" style="left:14%;top:31%;--w:54;--r:0deg;animation-delay:-3.02s" aria-hidden="true"><use href="#dreed"/></svg>
+    <svg class="it reed grass" viewBox="0 0 70 140" style="left:88%;top:47%;--w:52;--r:0deg;animation-delay:-4.39s" aria-hidden="true"><use href="#dreed"/></svg>
+    <svg class="it reed grass" viewBox="0 0 70 140" style="left:50%;top:69%;--w:46;--r:0deg;animation-delay:-5.76s" aria-hidden="true"><use href="#dreed"/></svg>
+    <svg class="b-dol d1" viewBox="-12 -4 102 54" aria-hidden="true"><use href="#ddolphin" x="-12" y="-4" width="102" height="54"/></svg>
+    <svg class="b-dol d2" viewBox="-12 -4 102 54" aria-hidden="true"><use href="#ddolphin" x="-12" y="-4" width="102" height="54"/></svg>
+    <svg class="b-boat" viewBox="0 0 80 70" aria-hidden="true"><use href="#dboat"/></svg>
+    <svg class="b-sea" viewBox="0 -34 220 134" preserveAspectRatio="none" aria-hidden="true"><use href="#dsea" x="0" y="-34" width="220" height="134"/></svg>
+    </div>
+
+    <footer class="wall">
+        <!-- 돌담 위에 줄지어 선 귤하르방들 -->
+        <svg class="hb wall-hb w1" viewBox="0 0 100 150" aria-hidden="true"><use href="#harubang"/></svg>
+        <svg class="hb wall-hb w2" viewBox="0 0 100 150" aria-hidden="true"><use href="#harubang"/></svg>
+        <svg class="hb wall-hb w3" viewBox="0 0 100 150" aria-hidden="true"><use href="#harubang"/></svg>
+        <div class="wall-txt">🍊 제주 돌담처럼 차곡차곡 모은 제주 이야기 🌺</div>
+    </footer>
+
+    <script>
+        // 데이터는 jeju_spots.json 내용을 그대로 넣은 것입니다. (파일 하나로 제출하기 위해 포함)
+        const DATA = {
+    "region":  "제주특별자치도",
+    "topic":  "제주 관광지·명소·맛집",
+    "note":  "관광지는 위키백과, 맛집은 OpenStreetMap 기록을 출처로 수집했습니다. score와 selected는 개인 관심도를 나타내는 임의 값입니다. 맛집 사진은 해당 가게가 아닌 대표 음식 사진입니다.",
+    "items":  [
+                  {
+                      "name":  "만장굴",
+                      "kind":  "관광지",
+                      "category":  "숲·자연",
+                      "area":  "동쪽",
+                      "description":  "제주 김녕굴과 만장굴은 대한민국 제주특별자치도 제주시 구좌읍에 있는 용암 동굴이다.",
+                      "score":  90,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC_%EA%B9%80%EB%85%95%EA%B5%B4%EA%B3%BC_%EB%A7%8C%EC%9E%A5%EA%B5%B4",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/%EB%A7%8C%EC%9E%A5%EA%B5%B4_%2824%29.jpg/500px-%EB%A7%8C%EC%9E%A5%EA%B5%B4_%2824%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "용암동굴"
+                               ]
+                  },
+                  {
+                      "name":  "비자림",
+                      "kind":  "관광지",
+                      "category":  "숲·자연",
+                      "area":  "동쪽",
+                      "description":  "제주 평대리 비자나무 숲은 대한민국 제주특별자치도 제주시 구좌읍 평대리에 있는 비자나무 숲이다.",
+                      "score":  88,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC_%ED%8F%89%EB%8C%80%EB%A6%AC_%EB%B9%84%EC%9E%90%EB%82%98%EB%AC%B4_%EC%88%B2",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Bijarim_Forest.jpg/500px-Bijarim_Forest.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "숲"
+                               ]
+                  },
+                  {
+                      "name":  "김녕해수욕장",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "동쪽",
+                      "description":  "김녕해수욕장은 제주특별자치도 제주시 구좌읍 김녕리에 위치한 해수욕장이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EA%B9%80%EB%85%95%ED%95%B4%EC%88%98%EC%9A%95%EC%9E%A5",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/%EA%B9%80%EB%85%95%EC%84%B1%EC%84%B8%EA%B8%B0%ED%95%B4%EB%B3%80.JPG/500px-%EA%B9%80%EB%85%95%EC%84%B1%EC%84%B8%EA%B8%B0%ED%95%B4%EB%B3%80.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다"
+                               ]
+                  },
+                  {
+                      "name":  "다랑쉬오름",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "동쪽",
+                      "description":  "다랑쉬오름은 대한민국 제주특별자치도의 제주시에 있는 측화산이다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%8B%A4%EB%9E%91%EC%89%AC%EC%98%A4%EB%A6%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/%EB%8B%A4%EB%9E%91%EC%89%AC%EC%98%A4%EB%A6%84.JPG/500px-%EB%8B%A4%EB%9E%91%EC%89%AC%EC%98%A4%EB%A6%84.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름"
+                               ]
+                  },
+                  {
+                      "name":  "용눈이오름",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "동쪽",
+                      "description":  "용눈이오름은 대한민국 제주특별자치도의 제주시 구좌읍 종달리에 있는 오름(측화산)이다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%9A%A9%EB%88%88%EC%9D%B4%EC%98%A4%EB%A6%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/%EC%9A%A9%EB%88%88%EC%9D%B4%EC%98%A4%EB%A6%84_%282018.05.08%29.jpg/500px-%EC%9A%A9%EB%88%88%EC%9D%B4%EC%98%A4%EB%A6%84_%282018.05.08%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름"
+                               ]
+                  },
+                  {
+                      "name":  "동문재래시장",
+                      "kind":  "관광지",
+                      "category":  "시장·마을",
+                      "area":  "제주시",
+                      "description":  "제주 동문재래시장은 대한민국 제주특별자치도 제주시에 위치한 재래시장이다.",
+                      "score":  82,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%8F%99%EB%AC%B8%EC%9E%AC%EB%9E%98%EC%8B%9C%EC%9E%A5",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Jeju_dongmun_market_1.JPG/500px-Jeju_dongmun_market_1.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "시장"
+                               ]
+                  },
+                  {
+                      "name":  "국립제주박물관",
+                      "kind":  "관광지",
+                      "category":  "박물관·전시",
+                      "area":  "제주시",
+                      "description":  "국립제주박물관은 국립중앙박물관의 소속기관이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EA%B5%AD%EB%A6%BD%EC%A0%9C%EC%A3%BC%EB%B0%95%EB%AC%BC%EA%B4%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Jeju_Island_20141129_10_%2815926202611%29.jpg/500px-Jeju_Island_20141129_10_%2815926202611%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "박물관"
+                               ]
+                  },
+                  {
+                      "name":  "제주특별자치도 민속자연사박물관",
+                      "kind":  "관광지",
+                      "category":  "박물관·전시",
+                      "area":  "제주시",
+                      "description":  "제주특별자치도 민속자연사박물관은 제주특별자치도의 민속문화와 자연사를 보존하기 위해 제주특별자치도청 산하에 설치된 사업소이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%EB%AF%BC%EC%86%8D%EC%9E%90%EC%97%B0%EC%82%AC%EB%B0%95%EB%AC%BC%EA%B4%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%EB%AF%BC%EC%86%8D%EC%9E%90%EC%97%B0%EC%82%AC%EB%B0%95%EB%AC%BC%EA%B4%80_%EC%9E%85%EA%B5%AC.jpg/500px-%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%EB%AF%BC%EC%86%8D%EC%9E%90%EC%97%B0%EC%82%AC%EB%B0%95%EB%AC%BC%EA%B4%80_%EC%9E%85%EA%B5%AC.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "박물관"
+                               ]
+                  },
+                  {
+                      "name":  "용두암",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "제주시",
+                      "description":  "용두암은 제주특별자치도 제주시 용담동 용연 부근의 바닷가에 위치한 바위로, 높이는 10m이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%9A%A9%EB%91%90%EC%95%94",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/KOCIS_Jeju_Island_%285982717071%29.jpg/500px-KOCIS_Jeju_Island_%285982717071%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다",
+                                   "기암"
+                               ]
+                  },
+                  {
+                      "name":  "불탑사 오층석탑",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "제주 불탑사 오층석탑은 대한민국 제주특별자치도 제주시 삼양일동 불탑사에 있는 고려시대의 오층석탑이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC_%EB%B6%88%ED%83%91%EC%82%AC_%EC%98%A4%EC%B8%B5%EC%84%9D%ED%83%91",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Five_layers_stone_pagoda.jpg/500px-Five_layers_stone_pagoda.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "제주목관아",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "제주목 관아는 조선 시대 제주목에 파견된 지방관인 제주목사가 업무를 보던 관청 건물이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC%EB%AA%A9_%EA%B4%80%EC%95%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Gwandeokjeong_Pavilion_and_Jeju_Mok_Office_2.JPG/500px-Gwandeokjeong_Pavilion_and_Jeju_Mok_Office_2.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "관덕정",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "제주 관덕정은 대한민국 제주특별자치도 제주시 삼도2동에 있는 조선 시대의 누정이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EA%B4%80%EB%8D%95%EC%A0%95",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Gwandeokjeong_Pavilion_2.JPG/500px-Gwandeokjeong_Pavilion_2.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "삼성혈",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "삼성혈은 대한민국 제주시의 제주 칼 호텔과 제주도민속자연사박물관 사이의 송림 가운데에 위치한 3개의 구멍이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%82%BC%EC%84%B1%ED%98%88",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Three_sacred_holes_in_Jeju.JPG/500px-Three_sacred_holes_in_Jeju.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "오현단",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "오현단은 조선 시대에 제주도에 유배되거나 방어사로 부임하여 교학 발전에 공헌한 다섯 명, 즉 오현을 기리기 위해 지은 제단으로, 현재 대한민국 제주특별자치도 제주시 이도1동에 있다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%98%A4%ED%98%84%EB%8B%A8",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Ohyeondan_Altar.JPG/500px-Ohyeondan_Altar.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "제주향교",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "제주향교는 대한민국 제주특별자치도 제주시 용담1동에 있는 향교이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC%ED%96%A5%EA%B5%90",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/ko/thumb/4/48/Daesungjun_in_JejuHyanggyo.jpg/500px-Daesungjun_in_JejuHyanggyo.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "제주성지",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "제주성지는 대한민국 제주특별자치도 제주시 이도1동에 있는 제주성의 잔존 터이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC%EC%84%B1%EC%A7%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Jeju_Fortress_Site_03.JPG/500px-Jeju_Fortress_Site_03.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "산지천",
+                      "kind":  "관광지",
+                      "category":  "숲·자연",
+                      "area":  "제주시",
+                      "description":  "산지천은 대한민국 제주특별자치도 제주시의 제주시 건입동과 일도1동을 흐르는 하천이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%82%B0%EC%A7%80%EC%B2%9C",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Sanjicheon.JPG/500px-Sanjicheon.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "산책"
+                               ]
+                  },
+                  {
+                      "name":  "넥슨컴퓨터박물관",
+                      "kind":  "관광지",
+                      "category":  "박물관·전시",
+                      "area":  "제주시",
+                      "description":  "넥슨컴퓨터박물관은 대한민국 제주특별자치도 제주시에 위치한 박물관으로 제주시 노형동 한라수목원 인근에 건립한 아시아 최초의 컴퓨터박물관이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%84%A5%EC%8A%A8%EC%BB%B4%ED%93%A8%ED%84%B0%EB%B0%95%EB%AC%BC%EA%B4%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Nexon_Computer_Museum.jpg/500px-Nexon_Computer_Museum.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "박물관"
+                               ]
+                  },
+                  {
+                      "name":  "어승생악",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "제주시",
+                      "description":  "어승생오름은 대한민국 제주특별자치도 제주시 해안동 산 220-13에 위치한 측화산이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%96%B4%EC%8A%B9%EC%83%9D%EC%98%A4%EB%A6%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Eoseungsaengak_05.jpg/500px-Eoseungsaengak_05.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름"
+                               ]
+                  },
+                  {
+                      "name":  "함덕해수욕장",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "제주시",
+                      "description":  "함덕해수욕장은 제주특별자치도 제주시 조천읍 함덕리에 있는 해변이다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%ED%95%A8%EB%8D%95%ED%95%B4%EC%88%98%EC%9A%95%EC%9E%A5",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Hamdeok_Beach_May_2026_04.jpg/500px-Hamdeok_Beach_May_2026_04.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다"
+                               ]
+                  },
+                  {
+                      "name":  "연북정",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "연북정은 대한민국 제주특별자치도 제주시 조천읍에 있는, 조선 시대의 정자이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%97%B0%EB%B6%81%EC%A0%95",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Yeonbukjeong_2.jpg/500px-Yeonbukjeong_2.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "에코랜드",
+                      "kind":  "관광지",
+                      "category":  "숲·자연",
+                      "area":  "제주시",
+                      "description":  "에코랜드는 제주특별자치도 제주시 조천읍 대흘리에 위치한 테마파크이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%97%90%EC%BD%94%EB%9E%9C%EB%93%9C",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/%EC%A0%9C%EC%A3%BC%EB%8F%84_%EC%97%90%EC%BD%94%EB%9E%9C%EB%93%9C.jpeg/500px-%EC%A0%9C%EC%A3%BC%EB%8F%84_%EC%97%90%EC%BD%94%EB%9E%9C%EB%93%9C.jpeg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "숲",
+                                   "테마파크"
+                               ]
+                  },
+                  {
+                      "name":  "거문오름",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "제주시",
+                      "description":  "거문오름은 대한민국 제주특별자치도의 제주시 조천읍과 서귀포시 남원읍, 서귀포시 표선면의 경계를 이루고 있는 오름이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EA%B1%B0%EB%AC%B8%EC%98%A4%EB%A6%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/%EA%B1%B0%EB%AC%B8%EC%98%A4%EB%A6%84.jpg/500px-%EA%B1%B0%EB%AC%B8%EC%98%A4%EB%A6%84.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름"
+                               ]
+                  },
+                  {
+                      "name":  "산굼부리",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "제주시",
+                      "description":  "산굼부리는 대한민국 제주특별자치도 제주시 조천읍 교래리에 있는 분화구 모습의 오름으로, 제주도 유일의 함몰형 측화산이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%82%B0%EA%B5%BC%EB%B6%80%EB%A6%AC",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/San-Gumburi_Volcano_01.jpg/500px-San-Gumburi_Volcano_01.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "분화구"
+                               ]
+                  },
+                  {
+                      "name":  "사려니숲길",
+                      "kind":  "관광지",
+                      "category":  "숲·자연",
+                      "area":  "제주시",
+                      "description":  "사려니숲길은 비자림로를 시작으로 물찻오름과 사려니오름을 거쳐가는 숲길로 삼나무숲이 우거진 지방도 제1112호선 초입에 위치하고 있다.",
+                      "score":  90,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%82%AC%EB%A0%A4%EB%8B%88%EC%88%B2%EA%B8%B8",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/%EC%82%AC%EB%A0%A4%EB%8B%88%EC%88%B2%EA%B8%B8_%EC%99%B8%EB%B6%80_%EB%AA%A8%EC%8A%B5.jpg/500px-%EC%82%AC%EB%A0%A4%EB%8B%88%EC%88%B2%EA%B8%B8_%EC%99%B8%EB%B6%80_%EB%AA%A8%EC%8A%B5.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "숲",
+                                   "산책"
+                               ]
+                  },
+                  {
+                      "name":  "새별오름",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "제주시",
+                      "description":  "새별오름은 대한민국 제주특별자치도 제주시 애월읍 봉성리에 위치한 오름(측화산)이다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%83%88%EB%B3%84%EC%98%A4%EB%A6%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Sae-Byeol_Oreum_2020-11-08.jpg/500px-Sae-Byeol_Oreum_2020-11-08.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름"
+                               ]
+                  },
+                  {
+                      "name":  "차귀도",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "제주시",
+                      "description":  "차귀도는 대한민국 제주특별자치도 제주시 한경면 고산리에 있는 제주특별자치도의 섬으로 면적 0.16km2이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%B0%A8%EA%B7%80%EB%8F%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Chagwido_01.jpg/500px-Chagwido_01.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "섬"
+                               ]
+                  },
+                  {
+                      "name":  "절부암",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "제주시",
+                      "description":  "절부암은 대한민국 제주특별자치도 제주시 한경면에 있는 바위이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%88%EB%B6%80%EC%95%94",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/%EC%A0%88%EB%B6%80%EC%95%94.jpg/500px-%EC%A0%88%EB%B6%80%EC%95%94.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "명월대",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "서쪽",
+                      "description":  "명월대는 대한민국 제주특별자치도 제주시 한림읍에 있는, 조선 후기 이 지방 유학자들과 시인들이 어울려 풍류를 즐기던 곳이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%AA%85%EC%9B%94%EB%8C%80",
+                      "image":  "https://upload.wikimedia.org/wikipedia/commons/a/ac/%EB%AA%85%EC%9B%94%EB%8C%80.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail_unscaled",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "명월성지",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "서쪽",
+                      "description":  "명월성지는 대한민국 제주특별자치도 제주시 한림읍 명월리와 동명리 일대에 남아 있는 성터이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%AA%85%EC%9B%94%EC%84%B1%EC%A7%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/%EB%AA%85%EC%9B%94%EC%84%B1%EC%A7%80%28%EC%A0%95%EB%A9%B4%29.jpg/500px-%EB%AA%85%EC%9B%94%EC%84%B1%EC%A7%80%28%EC%A0%95%EB%A9%B4%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "오설록 티 뮤지엄",
+                      "kind":  "관광지",
+                      "category":  "박물관·전시",
+                      "area":  "서쪽",
+                      "description":  "오설록은 주식회사 오설록의 차 브랜드로 당시 태평양화학 창업주 고 서성환 회장의 지시로 황무지에 녹차밭 가꾸기 사업을 시작하여, 1983년 3월 황무지 49만 5000m²(약 15만 평)을 개간하여 다원과 녹차 공장을 만들었다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%98%A4%EC%84%A4%EB%A1%9D",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/O%27Sulloc_Tea_Museum.jpg/500px-O%27Sulloc_Tea_Museum.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "전시",
+                                   "카페"
+                               ]
+                  },
+                  {
+                      "name":  "산방산",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "서쪽",
+                      "description":  "산방산은 대한민국 제주특별자치도 서귀포시 안덕면 사계리에 있는 산이다.",
+                      "score":  88,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%82%B0%EB%B0%A9%EC%82%B0",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Sanbangsan_%285983281424%29.jpg/500px-Sanbangsan_%285983281424%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "산"
+                               ]
+                  },
+                  {
+                      "name":  "용머리해안",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "서쪽",
+                      "description":  "제주 사계리 용머리해안은 바닷속 세 개의 화구에서 분출된 화산쇄설물이 쌓여 만들어진 하이드로볼케이노의 암석해안으로, 성산일출봉, 수월봉과 달리 화구가 이동하며 생성된 지형적 가치가 크다.",
+                      "score":  88,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC_%EC%82%AC%EA%B3%84%EB%A6%AC_%EC%9A%A9%EB%A8%B8%EB%A6%AC%ED%95%B4%EC%95%88",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/%EC%A0%9C%EC%A3%BC_%EC%9A%A9%EB%A8%B8%EB%A6%AC%ED%95%B4%EC%95%88_%28Jeju_Yongmeori_Coast%29.jpg/500px-%EC%A0%9C%EC%A3%BC_%EC%9A%A9%EB%A8%B8%EB%A6%AC%ED%95%B4%EC%95%88_%28Jeju_Yongmeori_Coast%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다",
+                                   "지질"
+                               ]
+                  },
+                  {
+                      "name":  "형제섬",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "서쪽",
+                      "description":  "형제섬은 제주특별자치도 서귀포시 안덕면 사계리에 있는 무인도이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%ED%98%95%EC%A0%9C%EC%84%AC",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Hyeongjeseom_01.jpg/500px-Hyeongjeseom_01.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "섬"
+                               ]
+                  },
+                  {
+                      "name":  "본태박물관",
+                      "kind":  "관광지",
+                      "category":  "박물관·전시",
+                      "area":  "서쪽",
+                      "description":  "본태박물관은 제주특별자치도 서귀포시 안덕면에 위치한 박물관이자 복합문화공간이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%B3%B8%ED%83%9C%EB%B0%95%EB%AC%BC%EA%B4%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Bontae_Museum.png/500px-Bontae_Museum.png?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "박물관"
+                               ]
+                  },
+                  {
+                      "name":  "제주항공우주박물관",
+                      "kind":  "관광지",
+                      "category":  "박물관·전시",
+                      "area":  "서쪽",
+                      "description":  "제주항공우주박물관은 미래 첨단산업인 우주와 항공을 테마로 교육과 엔터테인먼트를 접목한 체험형 공간과 전시프로그램, 천문대와 전망대 등을 조성하여 방문객들에게 꿈과 비전을 제시한다",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC%ED%95%AD%EA%B3%B5%EC%9A%B0%EC%A3%BC%EB%B0%95%EB%AC%BC%EA%B4%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Jeju_Aerospace_Museum_Aviation_Hall_20140606-01.JPG/500px-Jeju_Aerospace_Museum_Aviation_Hall_20140606-01.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "박물관"
+                               ]
+                  },
+                  {
+                      "name":  "외돌개",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "서귀포",
+                      "description":  "제주 서귀포 외돌개는 대한민국 제주특별자치도 서귀포시 서홍동에 있는 자연명승이다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%99%B8%EB%8F%8C%EA%B0%9C",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/%EC%99%B8%EB%8F%8C%EA%B0%9C.jpg/500px-%EC%99%B8%EB%8F%8C%EA%B0%9C.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다",
+                                   "산책"
+                               ]
+                  },
+                  {
+                      "name":  "삼매봉",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "서귀포",
+                      "description":  "삼매봉은 대한민국 제주특별자치도 서귀포시에 위치하는 기생화산이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%82%BC%EB%A7%A4%EB%B4%89",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Sammaebong_12.jpg/500px-Sammaebong_12.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름"
+                               ]
+                  },
+                  {
+                      "name":  "천지연폭포",
+                      "kind":  "관광지",
+                      "category":  "폭포·계곡",
+                      "area":  "서귀포",
+                      "description":  "천지연폭포는 제주도 서귀포시 서귀동에 있는 폭포이다.",
+                      "score":  88,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%B2%9C%EC%A7%80%EC%97%B0%ED%8F%AD%ED%8F%AC",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Korea-Jeju-Cheonjiyeon_Waterfall-01.jpg/500px-Korea-Jeju-Cheonjiyeon_Waterfall-01.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "폭포"
+                               ]
+                  },
+                  {
+                      "name":  "정방폭포",
+                      "kind":  "관광지",
+                      "category":  "폭포·계곡",
+                      "area":  "서귀포",
+                      "description":  "정방폭포는 대한민국 제주특별자치도 서귀포시 중심가에서 1.5km 동남쪽에 있는 폭포이다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%95%EB%B0%A9%ED%8F%AD%ED%8F%AC",
+                      "image":  "https://upload.wikimedia.org/wikipedia/commons/6/60/Jeongbang_Waterfall.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail_unscaled",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "폭포"
+                               ]
+                  },
+                  {
+                      "name":  "천제연폭포",
+                      "kind":  "관광지",
+                      "category":  "폭포·계곡",
+                      "area":  "서귀포",
+                      "description":  "천제연폭포는 제주 서귀포시 중문동에 있는 폭포이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%B2%9C%EC%A0%9C%EC%97%B0%ED%8F%AD%ED%8F%AC",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Chunjeyeon_Waterfall_Jeju_Island-_%EC%B2%9C%EC%A0%9C%EC%97%B0%ED%8F%AD%ED%8F%AC.jpg/500px-Chunjeyeon_Waterfall_Jeju_Island-_%EC%B2%9C%EC%A0%9C%EC%97%B0%ED%8F%AD%ED%8F%AC.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "폭포"
+                               ]
+                  },
+                  {
+                      "name":  "엉또폭포",
+                      "kind":  "관광지",
+                      "category":  "폭포·계곡",
+                      "area":  "서귀포",
+                      "description":  "엉또폭포는 대한민국 제주특별자치도 서귀포시 강정동에 위치한 폭포이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%97%89%EB%98%90%ED%8F%AD%ED%8F%AC",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Eongtto-pokpo.JPG/500px-Eongtto-pokpo.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "폭포"
+                               ]
+                  },
+                  {
+                      "name":  "쇠소깍",
+                      "kind":  "관광지",
+                      "category":  "폭포·계곡",
+                      "area":  "서귀포",
+                      "description":  "쇠소깍은 제주특별자치도 서귀포시 하효동에 위치한 효돈천 하구 일대를 지칭한다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%87%A0%EC%86%8C%EA%B9%8D",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/%EC%87%A0%EC%86%8C%EA%B9%8D_%287%29.jpg/500px-%EC%87%A0%EC%86%8C%EA%B9%8D_%287%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다",
+                                   "계곡"
+                               ]
+                  },
+                  {
+                      "name":  "섶섬",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "서귀포",
+                      "description":  "섶섬 또는 섭섬, 삼도는 제주특별자치도 서귀포시 보목동 산1번지에 위치한 섬이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%84%B6%EC%84%AC",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/260728_%ED%86%A0%ED%8F%89%EB%8F%99%EC%97%90%EC%84%9C_%EB%B0%94%EB%9D%BC%EB%B3%B8_%EC%84%B6%EC%84%AC.jpg/500px-260728_%ED%86%A0%ED%8F%89%EB%8F%99%EC%97%90%EC%84%9C_%EB%B0%94%EB%9D%BC%EB%B3%B8_%EC%84%B6%EC%84%AC.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "섬"
+                               ]
+                  },
+                  {
+                      "name":  "기당미술관",
+                      "kind":  "관광지",
+                      "category":  "박물관·전시",
+                      "area":  "서귀포",
+                      "description":  "기당미술관은 제주특별자치도 서귀포시 소재의 도립 미술관이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EA%B8%B0%EB%8B%B9%EB%AF%B8%EC%88%A0%EA%B4%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/%EA%B8%B0%EB%8B%B9%EB%AF%B8%EC%88%A0%EA%B4%80_240727.jpg/500px-%EA%B8%B0%EB%8B%B9%EB%AF%B8%EC%88%A0%EA%B4%80_240727.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "미술관"
+                               ]
+                  },
+                  {
+                      "name":  "서귀포매일올레시장",
+                      "kind":  "관광지",
+                      "category":  "시장·마을",
+                      "area":  "서귀포",
+                      "description":  "서귀포매일올레시장은 대한민국 제주특별자치도 서귀포시 서귀동에 있는 대형 전통시장이다.",
+                      "score":  82,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%84%9C%EA%B7%80%ED%8F%AC%EB%A7%A4%EC%9D%BC%EC%98%AC%EB%A0%88%EC%8B%9C%EC%9E%A5",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Seogwipo_Maeil_Olle_Market_03.jpg/500px-Seogwipo_Maeil_Olle_Market_03.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "시장"
+                               ]
+                  },
+                  {
+                      "name":  "약천사",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "서귀포",
+                      "description":  "약천사는 제주특별자치도 서귀포시에 위치한 사찰로, 대한불교 조계종 제10교구 본사 은해사의 말사이다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%95%BD%EC%B2%9C%EC%82%AC",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/%EC%95%BD%EC%B2%9C%EC%82%AC1.jpeg/500px-%EC%95%BD%EC%B2%9C%EC%82%AC1.jpeg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "사찰"
+                               ]
+                  },
+                  {
+                      "name":  "여미지식물원",
+                      "kind":  "관광지",
+                      "category":  "숲·자연",
+                      "area":  "서귀포",
+                      "description":  "여미지식물원은 대한민국 제주특별자치도 서귀포시 중문관광로 93 중문관광단지에 있는 식물원이다.",
+                      "score":  80,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%97%AC%EB%AF%B8%EC%A7%80%EC%8B%9D%EB%AC%BC%EC%9B%90",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Yeomiji.jpg/500px-Yeomiji.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  true,
+                      "tags":  [
+                                   "식물원"
+                               ]
+                  },
+                  {
+                      "name":  "성읍민속마을",
+                      "kind":  "관광지",
+                      "category":  "시장·마을",
+                      "area":  "서귀포",
+                      "description":  "제주 성읍마을은 대한민국 제주특별자치도 서귀포시 표선면에 위치한 민속 마을이다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC_%EC%84%B1%EC%9D%8D%EB%A7%88%EC%9D%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Seongeup_Historic_Village.jpg/500px-Seongeup_Historic_Village.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "민속마을"
+                               ]
+                  },
+                  {
+                      "name":  "따라비오름",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "서귀포",
+                      "description":  "따라비오름은 대한민국 제주특별자치도의 기생화산으로, 해발 342m, 높이 107m다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%94%B0%EB%9D%BC%EB%B9%84%EC%98%A4%EB%A6%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/DDarabi.jpg/500px-DDarabi.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름"
+                               ]
+                  },
+                  {
+                      "name":  "알뜨르비행장",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "서귀포",
+                      "description":  "알뜨르 비행장은 제주도 서귀포시 대정읍 상모리 송악산 근처에 있는 비행장이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%95%8C%EB%9C%A8%EB%A5%B4_%EB%B9%84%ED%96%89%EC%9E%A5",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Alddreu_Airfield.JPG/500px-Alddreu_Airfield.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "마라도",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "서귀포",
+                      "description":  "마라도는 대한민국의 최남단에 있는 섬으로, 행정구역상 제주특별자치도 서귀포시 대정읍 마라리에 속해 있다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%A7%88%EB%9D%BC%EB%8F%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Marado_Island_View.jpg/500px-Marado_Island_View.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "섬"
+                               ]
+                  },
+                  {
+                      "name":  "가파도",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "서귀포",
+                      "description":  "가파도는 제주도에서 2.2 km 남쪽에 있는 섬으로, 행정구역상 제주특별자치도 서귀포시 대정읍 가파리이다.",
+                      "score":  85,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EA%B0%80%ED%8C%8C%EB%8F%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Gapado_scenery.JPG/500px-Gapado_scenery.JPG?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "섬"
+                               ]
+                  },
+                  {
+                      "name":  "대정성지",
+                      "kind":  "관광지",
+                      "category":  "역사·유적",
+                      "area":  "서귀포",
+                      "description":  "대정성지는 대한민국 제주특별자치도 서귀포시 대정읍 안성리에 있는 조선시대의 성 터이다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://ko.wikipedia.org/wiki/%EB%8C%80%EC%A0%95%EC%84%B1%EC%A7%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Daejeong_Fortress.jpg/500px-Daejeong_Fortress.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "유적"
+                               ]
+                  },
+                  {
+                      "name":  "섭지코지",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "동쪽",
+                      "description":  "섭지코지는 제주특별자치도 서귀포시 성산읍 고성리의 해안 지형(육계도)이다.",
+                      "score":  90,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%84%AD%EC%A7%80%EC%BD%94%EC%A7%80",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/%EC%A0%9C%EC%A3%BC%EB%8F%84_%EC%84%AD%EC%A7%80%EC%BD%94%EC%A7%80.jpeg/500px-%EC%A0%9C%EC%A3%BC%EB%8F%84_%EC%84%AD%EC%A7%80%EC%BD%94%EC%A7%80.jpeg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다",
+                                   "산책"
+                               ]
+                  },
+                  {
+                      "name":  "성산일출봉",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "동쪽",
+                      "description":  "성산일출봉은 대한민국 제주특별자치도 서귀포시 성산읍 성산리에 있는 산이다.",
+                      "score":  95,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%84%B1%EC%82%B0%EC%9D%BC%EC%B6%9C%EB%B4%89",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/%EC%84%B1%EC%82%B0%EC%9D%BC%EC%B6%9C%EB%B4%89_%EC%B2%9C%EC%97%B0%EB%B3%B4%ED%98%B8%EA%B5%AC%EC%97%AD_2019%EB%85%84_%EC%B4%AC%EC%98%81%28%EC%B6%9C%EC%B2%98_%EB%AC%B8%ED%99%94%EC%9E%AC%EC%B2%AD_%EB%8C%80%EB%B3%80%EC%9D%B8%EC%8B%A4%29.jpg/500px-%EC%84%B1%EC%82%B0%EC%9D%BC%EC%B6%9C%EB%B4%89_%EC%B2%9C%EC%97%B0%EB%B3%B4%ED%98%B8%EA%B5%AC%EC%97%AD_2019%EB%85%84_%EC%B4%AC%EC%98%81%28%EC%B6%9C%EC%B2%98_%EB%AC%B8%ED%99%94%EC%9E%AC%EC%B2%AD_%EB%8C%80%EB%B3%80%EC%9D%B8%EC%8B%A4%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "오름",
+                                   "바다"
+                               ]
+                  },
+                  {
+                      "name":  "우도",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "동쪽",
+                      "description":  "우도는 제주도의 동쪽 끝에 접하는 섬으로, 제주특별자치도에서 제주도 다음으로 큰 섬이다.",
+                      "score":  90,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%EC%9A%B0%EB%8F%84",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Udo_%28satellite_image%29.jpg/500px-Udo_%28satellite_image%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "섬"
+                               ]
+                  },
+                  {
+                      "name":  "한라산",
+                      "kind":  "관광지",
+                      "category":  "오름·산",
+                      "area":  "제주시",
+                      "description":  "한라산 또는 한나산은 대한민국 제주도 중앙부에 있는 해발 1,947.06m, 면적 약 1,820km2의 화산으로, 제주도의 면적 대부분을 차지하고 있다.",
+                      "score":  95,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%ED%95%9C%EB%9D%BC%EC%82%B0",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/KOCIS_Halla_Mountain_in_Jeju-do_%286387785543%29.jpg/500px-KOCIS_Halla_Mountain_in_Jeju-do_%286387785543%29.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "산",
+                                   "등산"
+                               ]
+                  },
+                  {
+                      "name":  "협재해수욕장",
+                      "kind":  "관광지",
+                      "category":  "바다·섬",
+                      "area":  "서쪽",
+                      "description":  "협재해수욕장은 제주특별자치도 제주시 한림읍 협재리에 위치한 해수욕장이다.",
+                      "score":  88,
+                      "selected":  true,
+                      "source":  "https://ko.wikipedia.org/wiki/%ED%98%91%EC%9E%AC%ED%95%B4%EC%88%98%EC%9A%95%EC%9E%A5",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Hyeopjae.jpg/500px-Hyeopjae.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과",
+                      "indoor":  false,
+                      "tags":  [
+                                   "바다"
+                               ]
+                  },
+                  {
+                      "name":  "마라도에서온자장면집",
+                      "kind":  "맛집",
+                      "category":  "국수·면",
+                      "area":  "서쪽",
+                      "description":  "안덕면에 있는 국수·면 요리 음식점입니다.",
+                      "score":  61,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/relation/8201968",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Gogiguksu_gulmak.jpg/500px-Gogiguksu_gulmak.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://blog.naver.com/papyrusy",
+                      "hours":  "We-Mo 11:00-21:00"
+                  },
+                  {
+                      "name":  "씨푸드샹그릴라",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "색달동에 있는 해산물 음식점입니다.",
+                      "score":  72,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/242462793",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  "12:00-22:00"
+                  },
+                  {
+                      "name":  "돈목장 서귀포점",
+                      "kind":  "맛집",
+                      "category":  "제주 향토음식",
+                      "area":  "서귀포",
+                      "description":  "서호동에 있는 제주 향토음식 음식점입니다.",
+                      "score":  52,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/373180525",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Gogiguksu_gulmak.jpg/500px-Gogiguksu_gulmak.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://naver.me/F3EQeYu7",
+                      "hours":  "16:00-22:00"
+                  },
+                  {
+                      "name":  "형제도식당",
+                      "kind":  "맛집",
+                      "category":  "음식점",
+                      "area":  "서쪽",
+                      "description":  "대정읍에 있는 음식점입니다.",
+                      "score":  63,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/374245059",
+                      "image":  "",
+                      "image_source":  null,
+                      "website":  "https://brothersdining.modoo.at/",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "오들락",
+                      "kind":  "맛집",
+                      "category":  "제주 향토음식",
+                      "area":  "서쪽",
+                      "description":  "안덕면에 있는 제주 향토음식 음식점입니다.",
+                      "score":  74,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/375025750",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Gogiguksu_gulmak.jpg/500px-Gogiguksu_gulmak.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://blog.naver.com/blind28/221014566623",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "대포동산횟집",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "대포동에 있는 해산물 음식점입니다.",
+                      "score":  54,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/375034893",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "대포횟집",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "대포동에 있는 해산물 음식점입니다.",
+                      "score":  65,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/375034895",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  "Mo-Su 12:00-22:00"
+                  },
+                  {
+                      "name":  "큰갯물횟집",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "대포동에 있는 해산물 음식점입니다.",
+                      "score":  76,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/375034898",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "스토브온 제주",
+                      "kind":  "맛집",
+                      "category":  "양식·브런치",
+                      "area":  "서쪽",
+                      "description":  "서쪽 지역의 양식 음식점입니다.",
+                      "score":  56,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/1148816028",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Tonkatsu_of_Kimukatsu.jpg/500px-Tonkatsu_of_Kimukatsu.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://instagram.com/stoveon_jeju",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "쉬림프박스",
+                      "kind":  "맛집",
+                      "category":  "음식점",
+                      "area":  "동쪽",
+                      "description":  "동쪽 지역의 음식점입니다.",
+                      "score":  67,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/4200240214",
+                      "image":  "",
+                      "image_source":  null,
+                      "hours":  null
+                  },
+                  {
+                      "name":  "거멍국수",
+                      "kind":  "맛집",
+                      "category":  "국수·면",
+                      "area":  "서쪽",
+                      "description":  "서쪽 지역의 국수·면 요리 음식점입니다.",
+                      "score":  78,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/4876639922",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Gogiguksu_gulmak.jpg/500px-Gogiguksu_gulmak.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://m.blog.naver.com/best_lady/220546006131",
+                      "hours":  "Mo-Su 08:00-21:00"
+                  },
+                  {
+                      "name":  "늘봄흑돼지",
+                      "kind":  "맛집",
+                      "category":  "흑돼지·고기",
+                      "area":  "제주시",
+                      "description":  "제주시 지역의 고기 음식점입니다.",
+                      "score":  58,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/5378863825",
+                      "image":  "",
+                      "image_source":  null,
+                      "website":  "http://jejuneulbom.co.kr",
+                      "hours":  "Mo-Su 11:00-23:45"
+                  },
+                  {
+                      "name":  "코우",
+                      "kind":  "맛집",
+                      "category":  "일식",
+                      "area":  "서귀포",
+                      "description":  "강정동에 있는 일식 음식점입니다.",
+                      "score":  69,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/8441483989",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Sushi_platter.jpg/500px-Sushi_platter.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://instagram.com/kou_jeju",
+                      "hours":  "Mo-Sa 17:30-24:00"
+                  },
+                  {
+                      "name":  "고집돌활우럭전문점",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "색달동에 있는 해산물 음식점입니다.",
+                      "score":  80,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/8441491171",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://www.gozipfish.com/map1",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "마라도최남단민박식당",
+                      "kind":  "맛집",
+                      "category":  "음식점",
+                      "area":  "서쪽",
+                      "description":  "대정읍에 있는 음식점입니다.",
+                      "score":  60,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/8441494345",
+                      "image":  "",
+                      "image_source":  null,
+                      "website":  "http://cafe.daum.net/maradodo",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "돌담애 성산 흑돼지",
+                      "kind":  "맛집",
+                      "category":  "흑돼지·고기",
+                      "area":  "동쪽",
+                      "description":  "성산읍에 있는 고기 음식점입니다.",
+                      "score":  71,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/8441898001",
+                      "image":  "",
+                      "image_source":  null,
+                      "website":  "https://www.instagram.com/doldamae_jeju/",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "보름숲",
+                      "kind":  "맛집",
+                      "category":  "한식",
+                      "area":  "서귀포",
+                      "description":  "회수동에 있는 한식 음식점입니다.",
+                      "score":  51,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/10705714158",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Dolsot-bibimbap.jpg/500px-Dolsot-bibimbap.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://www.instagram.com/team_boreumsup/",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "스시테이카이센동",
+                      "kind":  "맛집",
+                      "category":  "일식",
+                      "area":  "제주시",
+                      "description":  "도남동에 있는 일식 음식점입니다.",
+                      "score":  62,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/10711591236",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Sushi_platter.jpg/500px-Sushi_platter.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://www.instagram.com/p/CkajFXQLZRu/",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "홀리데이홀릭",
+                      "kind":  "맛집",
+                      "category":  "양식·브런치",
+                      "area":  "제주시",
+                      "description":  "조천읍에 있는 양식 음식점입니다.",
+                      "score":  73,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/10768104192",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Tonkatsu_of_Kimukatsu.jpg/500px-Tonkatsu_of_Kimukatsu.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://www.instagram.com/__holidayholic/",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "아스론가 제주",
+                      "kind":  "맛집",
+                      "category":  "양식·브런치",
+                      "area":  "동쪽",
+                      "description":  "구좌읍에 있는 양식 음식점입니다.",
+                      "score":  53,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/10943818530",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Tonkatsu_of_Kimukatsu.jpg/500px-Tonkatsu_of_Kimukatsu.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://www.instagram.com/arslonga_jeju",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "갓포효",
+                      "kind":  "맛집",
+                      "category":  "일식",
+                      "area":  "제주시",
+                      "description":  "노형동에 있는 일식 음식점입니다.",
+                      "score":  64,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/11204006309",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Sushi_platter.jpg/500px-Sushi_platter.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://app.catchtable.co.kr/ct/shop/kappohyo",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "고국수",
+                      "kind":  "맛집",
+                      "category":  "국수·면",
+                      "area":  "제주시",
+                      "description":  "제주시 지역의 국수·면 요리 음식점입니다.",
+                      "score":  75,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/12803428461",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Gogiguksu_gulmak.jpg/500px-Gogiguksu_gulmak.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://www.instagram.com/goguksoo_jeju/",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "제주우대",
+                      "kind":  "맛집",
+                      "category":  "음식점",
+                      "area":  "제주시",
+                      "description":  "노형동에 있는 음식점입니다.",
+                      "score":  55,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/12860383108",
+                      "image":  "",
+                      "image_source":  null,
+                      "website":  "https://www.instagram.com/jeju_woodae",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "두부",
+                      "kind":  "맛집",
+                      "category":  "양식·브런치",
+                      "area":  "서쪽",
+                      "description":  "서쪽 지역의 양식 음식점입니다.",
+                      "score":  66,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/13937642001",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Tonkatsu_of_Kimukatsu.jpg/500px-Tonkatsu_of_Kimukatsu.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "website":  "https://www.instagram.com/dubu.jeju",
+                      "hours":  "We-Su 12:00-14:30, 17:00-21:00"
+                  },
+                  {
+                      "name":  "해녀의 집",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "동쪽",
+                      "description":  "동쪽 지역의 해산물 음식점입니다.",
+                      "score":  77,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/242866738",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "우도동굴",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "제주시",
+                      "description":  "제주시 지역의 해산물 음식점입니다.",
+                      "score":  57,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/368662191",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "논짓물횟집",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "하예동에 있는 해산물 음식점입니다.",
+                      "score":  68,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/node/368971249",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "대평회센터",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "서귀포 지역의 해산물 음식점입니다.",
+                      "score":  79,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/370464535",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "삼무국수",
+                      "kind":  "맛집",
+                      "category":  "국수·면",
+                      "area":  "서귀포",
+                      "description":  "서귀포 지역의 국수·면 요리 음식점입니다.",
+                      "score":  59,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/373855262",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Gogiguksu_gulmak.jpg/500px-Gogiguksu_gulmak.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "SEAES Dining",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "중문동에 있는 해산물 음식점입니다.",
+                      "score":  70,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/373871635",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "중문어촌계 해녀의집",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "중문동에 있는 해산물 음식점입니다.",
+                      "score":  50,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/373871646",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "산호초 회마당",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서귀포",
+                      "description":  "대포동에 있는 해산물 음식점입니다.",
+                      "score":  61,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/374038651",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "남도횟집",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서쪽",
+                      "description":  "안덕면에 있는 해산물 음식점입니다.",
+                      "score":  72,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/374211244",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  },
+                  {
+                      "name":  "진미명가",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서쪽",
+                      "description":  "안덕면에 있는 해산물 음식점입니다.",
+                      "score":  52,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/374211276",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  "Mo-Su 11:30-20:30"
+                  },
+                  {
+                      "name":  "해변정식당",
+                      "kind":  "맛집",
+                      "category":  "해산물·횟집",
+                      "area":  "서쪽",
+                      "description":  "안덕면에 있는 해산물 음식점입니다.",
+                      "score":  63,
+                      "selected":  false,
+                      "source":  "https://www.openstreetmap.org/way/374211298",
+                      "image":  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mulhoe.jpg/500px-Mulhoe.jpg?utm_source=ko.wikipedia.org\u0026utm_campaign=api\u0026utm_content=thumbnail",
+                      "image_source":  "위키백과(대표 음식 사진)",
+                      "hours":  null
+                  }
+              ]
+};
+
+        const ICON = { '숲·자연': '🌲', '바다·섬': '🌊', '오름·산': '⛰️', '시장·마을': '🏘️', '박물관·전시': '🖼️', '역사·유적': '🏯', '폭포·계곡': '💧',
+            '국수·면': '🍜', '해산물·횟집': '🐟', '제주 향토음식': '🍲', '음식점': '🍽️', '양식·브런치': '🥞', '흑돼지·고기': '🥩', '일식': '🍣', '한식': '🍚' }
+
+        const items = DATA.items
+        const state = { kind: '전체', area: '전체', env: '전체', cat: '전체', q: '', sort: 'score', favOnly: false }
+
+        // '가 보고 싶은 곳' 표시는 data 의 selected 값에서 시작하고, 별을 눌러 바꿀 수 있다 (브라우저에 저장)
+        let fav = new Set(items.filter(i => i.selected).map(i => i.name))
+        try {
+            const saved = JSON.parse(localStorage.getItem('jeju-fav') || 'null')
+            if (Array.isArray(saved)) fav = new Set(saved)
+        } catch (e) {}
+        const saveFav = () => { try { localStorage.setItem('jeju-fav', JSON.stringify([...fav])) } catch (e) {} }
+
+        const $ = (id) => document.getElementById(id)
+
+        // ---- 지금 날씨 (Open-Meteo, 키 불필요). 지역별 중심 좌표로 한 번에 가져온다 ----
+        const weather = {}
+        const AREA_XY = { 제주시: [33.51, 126.52], 서쪽: [33.36, 126.30], 서귀포: [33.25, 126.56], 동쪽: [33.46, 126.88] }
+        function wxIcon(c) {
+            if (c === 0) return '☀️'
+            if (c <= 3) return '⛅'
+            if (c <= 48) return '🌫️'
+            if (c <= 67) return '🌧️'
+            if (c <= 77) return '❄️'
+            if (c <= 82) return '🌦️'
+            if (c <= 86) return '❄️'
+            return '⛈️'
+        }
+        async function loadWeather() {
+            try {
+                const names = Object.keys(AREA_XY)
+                const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + names.map(n => AREA_XY[n][0]).join(',') +
+                    '&longitude=' + names.map(n => AREA_XY[n][1]).join(',') + '&current=temperature_2m,weather_code&timezone=Asia%2FSeoul'
+                const d = await (await fetch(url)).json()
+                names.forEach((n, k) => {
+                    const c = d[k].current
+                    weather[n] = { temp: Math.round(c.temperature_2m), icon: wxIcon(c.weather_code), rain: c.weather_code >= 51 }
+                })
+                draw()
+            } catch (e) { /* 날씨를 못 가져오면 날씨 줄만 보이지 않는다 */ }
+        }
+
+        // 영업시간(OSM 형식)을 한글로: We-Mo 11:00-21:00 -> 수~월 11:00~21:00
+        function hoursKo(s) {
+            const D = { Mo: '월', Tu: '화', We: '수', Th: '목', Fr: '금', Sa: '토', Su: '일', PH: '공휴일' }
+            return s.replace('Mo-Su', '매일').replace(/\b(Mo|Tu|We|Th|Fr|Sa|Su|PH)\b/g, m => D[m])
+                .replace(/([가-힣])-([가-힣])/g, '$1~$2').replace(/(\d)-(\d)/g, '$1~$2').replace(/;/g, ' /')
+        }
+
+        function pills(boxId, values, key) {
+            const box = $(boxId)
+            box.textContent = ''
+            for (const v of values) {
+                const b = document.createElement('button')
+                b.className = 'pill' + (state[key] === v ? ' on' : '')
+                b.textContent = v
+                b.onclick = () => { state[key] = v; if (key === 'kind') { state.cat = '전체'; state.env = '전체' } draw() }
+                box.append(b)
+            }
+        }
+
+        function draw() {
+            // 구분에 맞는 분류만 버튼으로 보여 준다 (item.category 로 반복)
+            const inKind = items.filter(i => state.kind === '전체' || i.kind === state.kind)
+            const cats = ['전체']
+            for (const i of inKind) if (!cats.includes(i.category)) cats.push(i.category)
+            pills('kindBtns', ['전체', '관광지', '맛집'], 'kind')
+            pills('areaBtns', ['전체', '동쪽', '서쪽', '서귀포', '제주시'], 'area')
+            pills('catBtns', cats, 'cat')
+            pills('envBtns', ['전체', '실내', '야외'], 'env')
+            $('catRow').hidden = state.kind === '전체'     // 구분을 고르기 전에는 분류 버튼을 숨긴다
+            $('envRow').hidden = state.kind !== '관광지'   // 실내/야외는 관광지에만 있다
+
+            const q = state.q.trim().toLowerCase()
+            let list = inKind.filter(i =>
+                (state.area === '전체' || i.area === state.area) &&
+                (state.cat === '전체' || i.category === state.cat) &&
+                (state.env === '전체' || (state.env === '실내') === i.indoor) &&
+                (!state.favOnly || fav.has(i.name)) &&
+                (!q || (i.name + ' ' + i.description).toLowerCase().includes(q)))
+
+            if (state.sort === 'score') list = list.slice().sort((a, b) => b.score - a.score)
+            else if (state.sort === 'name') list = list.slice().sort((a, b) => a.name.localeCompare(b.name, 'ko'))
+
+            $('count').textContent = `${list.length}곳이 검색되었습니다`
+            $('favOnly').classList.toggle('on', state.favOnly)
+
+            const grid = $('grid')
+            grid.textContent = ''
+            if (list.length === 0) {
+                const p = document.createElement('div')
+                p.className = 'empty'
+                p.textContent = '조건에 맞는 곳이 없어요. 필터를 바꿔 보세요.'
+                grid.append(p)
+                return
+            }
+            for (const i of list) grid.append(card(i))
+        }
+
+        function card(i) {
+            const c = document.createElement('article')
+            c.className = 'card'
+
+            const pic = document.createElement('div')
+            pic.className = 'pic'
+            pic.textContent = ICON[i.category] || '🌴'
+            if (i.image) {
+                const img = document.createElement('img')
+                img.alt = i.name
+                img.referrerPolicy = 'no-referrer'
+                img.onload = () => pic.prepend(img)          // 불러오는 데 성공했을 때만 사진을 보여 준다
+                img.src = i.image
+            }
+            const tag = document.createElement('span')
+            tag.className = 'tag' + (i.kind === '맛집' ? ' food' : '')
+            tag.textContent = i.kind + ' · ' + i.category
+            const star = document.createElement('button')
+            star.className = 'star'
+            star.title = '가 보고 싶은 곳'
+            star.textContent = fav.has(i.name) ? '⭐' : '☆'
+            star.onclick = (e) => {
+                e.stopPropagation()                           // 별을 눌렀을 때는 지도 창이 열리지 않게 한다
+                if (fav.has(i.name)) fav.delete(i.name); else fav.add(i.name)
+                saveFav()
+                draw()
+            }
+            const hint = document.createElement('span')
+            hint.className = 'hint'
+            hint.textContent = '📍 가는 방법 보기'
+            pic.append(tag, star, hint)
+            pic.title = i.name + ' 지도 · 가는 방법'
+            pic.onclick = () => openMap(i)
+
+            const body = document.createElement('div')
+            body.className = 'body'
+            const h = document.createElement('h3')
+            h.textContent = i.name
+            const meta = document.createElement('div')
+            meta.className = 'meta'
+            meta.textContent = '📍 ' + i.area
+            const desc = document.createElement('div')
+            desc.className = 'desc'
+            desc.textContent = i.description
+            // 아래 정보줄: 관광지는 실내/야외 + 유형 태그, 맛집은 영업시간, 둘 다 지역의 지금 날씨
+            const info = document.createElement('div')
+            info.className = 'info'
+            const chips = document.createElement('div')
+            chips.className = 'chips'
+            const chip = (text, cls) => {
+                const s = document.createElement('span')
+                s.className = 'chip' + (cls ? ' ' + cls : '')
+                s.textContent = text
+                chips.append(s)
+            }
+            if (i.kind === '관광지') {
+                chip(i.indoor ? '🏠 실내' : '🌳 야외', i.indoor ? 'in' : 'out')
+                for (const t of i.tags || []) chip('#' + t)
+                info.append(chips)
+            } else {
+                const hrs = document.createElement('div')
+                hrs.className = 'hours'
+                hrs.textContent = i.hours ? '🕒 ' + hoursKo(i.hours) : '🕒 영업시간 정보 없음'
+                info.append(hrs)
+            }
+            const w = weather[i.area]
+            if (w) {
+                const wl = document.createElement('div')
+                wl.className = 'wx'
+                let line = `${w.icon} 지금 ${i.area} ${w.temp}°C`
+                if (i.kind === '관광지') {
+                    if (w.rain) line += i.indoor ? ' · 비 와도 괜찮아요' : ' · 비가 와요, 실내가 나아요'
+                    else line += i.indoor ? ' · 날씨와 상관없이 좋아요' : ' · 야외 나들이 좋아요'
+                }
+                wl.textContent = line
+                info.append(wl)
+            }
+            const links = document.createElement('div')
+            links.className = 'links'
+            const src = document.createElement('a')
+            src.href = i.source
+            src.target = '_blank'
+            src.rel = 'noopener'
+            src.textContent = '출처 보기'
+            links.append(src)
+            if (i.website) {
+                const w = document.createElement('a')
+                w.href = i.website
+                w.target = '_blank'
+                w.rel = 'noopener'
+                w.textContent = '가게 사이트'
+                links.append(w)
+            }
+            const map = document.createElement('a')
+            map.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('제주 ' + i.name)
+            map.target = '_blank'
+            map.rel = 'noopener'
+            map.textContent = '지도'
+            links.append(map)
+
+            body.append(h, meta, desc, info, links)
+            c.append(pic, body)
+            return c
+        }
+
+        // 사진을 누르면 지도 · 가는 방법 창을 연다 (장소 이름으로 검색하는 링크)
+        function openMap(i) {
+            const q = encodeURIComponent('제주 ' + i.name)
+            $('mapTitle').textContent = i.name
+            $('mapSub').textContent = '📍 ' + i.area + ' · 아래에서 지도를 고르세요'
+            const links = [
+                ['g', '🗺️ 구글 지도에서 보기', 'https://www.google.com/maps/search/?api=1&query=' + q],
+                ['d', '🚗 구글 지도 길찾기 (가는 방법)', 'https://www.google.com/maps/dir/?api=1&destination=' + q],
+                ['n', '🟢 네이버 지도에서 보기', 'https://map.naver.com/p/search/' + q],
+                ['k', '🟡 카카오맵에서 보기', 'https://map.kakao.com/?q=' + q],
+            ]
+            const box = $('mapBtns')
+            box.textContent = ''
+            for (const [cls, label, href] of links) {
+                const a = document.createElement('a')
+                a.className = cls
+                a.href = href
+                a.target = '_blank'
+                a.rel = 'noopener'
+                a.textContent = label
+                box.append(a)
+            }
+            const dlg = $('mapDlg')
+            if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '')
+        }
+        $('mapClose').onclick = () => $('mapDlg').close()
+        $('mapDlg').onclick = (e) => { if (e.target === $('mapDlg')) $('mapDlg').close() }   // 바깥을 누르면 닫힘
+
+        $('q').oninput = (e) => { state.q = e.target.value; draw() }
+        $('sort').onchange = (e) => { state.sort = e.target.value; draw() }
+        $('favOnly').onclick = () => { state.favOnly = !state.favOnly; draw() }
+        $('note').textContent = DATA.note + ' 관심도(score)는 개인이 정한 값이며 실제 평점이 아닙니다.'
+
+        // 양옆 풍경의 크기: 양옆 여백(띠) 폭에 비례해 키우고 줄인다
+        function fitBands() {
+            const w = Math.max(0, (innerWidth - 1112) / 2)
+            document.documentElement.style.setProperty('--k', Math.min(1.3, Math.max(.5, w / 400)))
+        }
+        fitBands()
+        addEventListener('resize', fitBands)
+
+        draw()
+        loadWeather()
+    </script>
+</body>
+</html>
